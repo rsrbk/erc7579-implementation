@@ -48,7 +48,7 @@ contract Bootstrap is ModuleManager, Fallback, HookManager {
 
         // init fallback
         if (_fallback.module != address(0)) {
-            _setFallback(_fallback.module);
+            _installFallback(_fallback.module, _fallback.data);
         }
     }
 

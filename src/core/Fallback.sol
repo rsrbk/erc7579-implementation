@@ -39,26 +39,28 @@ abstract contract Fallback is AccountBase, IAccountConfig {
             revert fallbackHandlerAlreadyInstalled(currentHandler);
         }
 
-        IFallback(fallbackHandler).onInstall(data);
-        _setFallback(fallbackHandler);
+        _installFallback(fallbackHandler, data);
         emit FallbackHandlerChanged(fallbackHandler);
     }
 
-    function uninstallFallback(
-        address fallbackHandler,
-        bytes calldata data
-    )
-        public
-        virtual
-        onlyEntryPointOrSelf
-    {
-        IFallback(fallbackHandler).onUninstall(data);
-        _setFallback(address(0));
+    function uninstallFallback(address, bytes calldata data) public virtual onlyEntryPointOrSelf {
+        _uninstallFallback(data);
     }
 
     function isFallbackInstalled(address fallbackHandler) public view returns (bool enabled) {
         address _handler = _getFallbackHandler();
         enabled = _handler == fallbackHandler;
+    }
+
+    function _installFallback(address fallbackHandler, bytes calldata data) internal {
+        IFallback(fallbackHandler).onInstall(data);
+        _setFallback(fallbackHandler);
+    }
+
+    function _uninstallFallback(bytes calldata data) internal {
+        address _handler = _getFallbackHandler();
+        IFallback(_handler).onUninstall(data);
+        _setFallback(address(0));
     }
 
     /**
