@@ -14,8 +14,6 @@ struct BootstrapConfig {
 
 contract Bootstrap is ModuleManager, Fallback, HookManager {
     function singleInitMSA(IModule validator, bytes calldata data) external {
-        _initModuleManager();
-
         // init validator
         _installValidator(address(validator), data);
     }
@@ -28,8 +26,6 @@ contract Bootstrap is ModuleManager, Fallback, HookManager {
     )
         external
     {
-        _initModuleManager();
-
         // init validators
         for (uint256 i; i < _validators.length; i++) {
             _installValidator(_validators[i].module, _validators[i].data);
