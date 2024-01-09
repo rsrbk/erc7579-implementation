@@ -8,7 +8,7 @@ import "../core/HookManager.sol";
 import "../interfaces/IModule.sol";
 
 struct BootstrapConfig {
-    IModule module;
+    address module;
     bytes data;
 }
 
@@ -32,23 +32,23 @@ contract Bootstrap is ModuleManager, Fallback, HookManager {
 
         // init validators
         for (uint256 i; i < _validators.length; i++) {
-            _installValidator(address(_validators[i].module), _validators[i].data);
+            _installValidator(_validators[i].module, _validators[i].data);
         }
 
         // init executors
         for (uint256 i; i < _executors.length; i++) {
-            if (address(_executors[i].module) == address(0)) continue;
-            _installExecutor(address(_executors[i].module), _executors[i].data);
+            if (_executors[i].module == address(0)) continue;
+            _installExecutor(_executors[i].module, _executors[i].data);
         }
 
         // init hook
-        if (address(_hook.module) != address(0)) {
-            _installHook(address(_hook.module), _hook.data);
+        if (_hook.module != address(0)) {
+            _installHook(_hook.module, _hook.data);
         }
 
         // init fallback
-        if (address(_fallback.module) != address(0)) {
-            _setFallback(address(_fallback.module));
+        if (_fallback.module != address(0)) {
+            _setFallback(_fallback.module);
         }
     }
 

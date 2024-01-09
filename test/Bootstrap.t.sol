@@ -19,7 +19,7 @@ contract BootstrapUtil {
         pure
         returns (BootstrapConfig memory config)
     {
-        config.module = IModule(module);
+        config.module = module;
         config.data = abi.encodeCall(IModule.onInstall, data);
     }
 
@@ -32,7 +32,7 @@ contract BootstrapUtil {
         returns (BootstrapConfig[] memory config)
     {
         config = new BootstrapConfig[](1);
-        config[0].module = IModule(module);
+        config[0].module = module;
         config[0].data = abi.encodeCall(IModule.onInstall, data);
     }
 
