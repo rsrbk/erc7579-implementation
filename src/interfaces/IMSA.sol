@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import { IERC4337 } from "./IERC4337.sol";
+
 /**
  * @dev Execution Interface of the minimal Modular Smart Account standard
  */
@@ -130,6 +132,15 @@ interface IExecutionUnsafe {
         external
         payable // gas bad
         returns (bytes memory result);
+}
+
+interface IExecutionUserOp {
+    function executeUserOp(
+        IERC4337.UserOperation calldata userOp,
+        bytes32 userOpHash
+    )
+        external
+        payable;
 }
 
 /**

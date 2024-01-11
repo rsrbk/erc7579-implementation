@@ -5,6 +5,7 @@ import "./interfaces/IERC4337.sol";
 import "forge-std/interfaces/IERC165.sol";
 import { IMSA, IExecutionUnsafe } from "./interfaces/IMSA.sol";
 import { Execution, IExecution } from "./core/Execution.sol";
+import { DecodeLib } from "./utils/Decode.sol";
 import { Fallback } from "./core/Fallback.sol";
 import { ModuleManager } from "./core/ModuleManager.sol";
 
@@ -19,9 +20,11 @@ import { ModuleManager } from "./core/ModuleManager.sol";
  *
  */
 abstract contract MSABase is Execution, ModuleManager, IERC4337, IMSA, Fallback {
+    using DecodeLib for bytes;
     /**
      * ERC-4337 validation function
      */
+
     function validateUserOp(
         UserOperation memory userOp,
         bytes32 userOpHash,
@@ -110,6 +113,27 @@ abstract contract MSABase is Execution, ModuleManager, IERC4337, IMSA, Fallback 
         returns (bytes[] memory returnDatas)
     {
         returnDatas = _execute(executions);
+    }
+
+    function executeUserOp(
+        UserOperation calldata userOp,
+        bytes32 userOpHash
+    )
+        external
+        payable
+        virtual
+        onlyEntryPointOrSelf
+    {
+        bytes4 execSelector = bytes4(userOp.callData[4:8]);
+        if (execSelector == this.execute.selector) {
+            address target;
+            uint256 value;
+            bytes calldata callData = userOp.callData[8:];
+            _execute(target, value, callData);
+        } else if (execSelector == this.executeBatch.selector) {
+            IExecution.Execution[] calldata executions = DecodeLib.decodeBatch(userOp.callData[4:]);
+            _execute(executions);
+        }
     }
 
     /////////////////////////////////////////////////////
