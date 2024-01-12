@@ -18,8 +18,6 @@ contract Bootstrap is ModuleManager, Fallback, HookManager, RegistryAdapter {
     )
         external
     {
-        _initModuleManager();
-
         // init validator
         _installValidator(address(validator), data);
 
@@ -37,8 +35,6 @@ contract Bootstrap is ModuleManager, Fallback, HookManager, RegistryAdapter {
     )
         external
     {
-        _initModuleManager();
-
         // init registry
         _setRegistry(IERC7484Registry(_registry));
         _setAttester(_attester);

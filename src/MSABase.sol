@@ -16,7 +16,6 @@ import { ModuleManager } from "./core/ModuleManager.sol";
  * Refer to the examples in this repo for different approaches.
  *      - ./accountExamples/MSA_ValidatorInSignature.sol (validator address is encoded in signature) - Kernel style
  *      - ./accountExamples/MSA_ValidatorInNonce.sol (validator address is encoded in nonce) - Inspired by ross (z0r0z)
- *
  */
 abstract contract MSABase is Execution, ModuleManager, IERC4337, IMSA, Fallback {
     /**

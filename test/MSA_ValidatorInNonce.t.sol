@@ -48,12 +48,14 @@ contract MSANonceTest is BootstrapUtil, Test {
 
         // create account
         account = MSA(
-            factory.createAccount({
-                salt: "1",
-                initCode: bootstrapSingleton._getInitMSACalldata(
-                    validators, executors, hook, fallbackHandler
-                    )
-            })
+            payable(
+                factory.createAccount({
+                    salt: "1",
+                    initCode: bootstrapSingleton._getInitMSACalldata(
+                        validators, executors, hook, fallbackHandler
+                        )
+                })
+            )
         );
         vm.deal(address(account), 1 ether);
     }

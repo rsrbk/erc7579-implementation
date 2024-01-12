@@ -43,12 +43,14 @@ contract MSATest is BootstrapUtil, Test {
 
         // create account
         account = MSA(
-            factory.createAccount({
-                salt: "1",
-                initCode: bootstrapSingleton._getInitMSACalldata(
-                    validators, executors, hook, fallbackHandler
-                    )
-            })
+            payable(
+                factory.createAccount({
+                    salt: "1",
+                    initCode: bootstrapSingleton._getInitMSACalldata(
+                        validators, executors, hook, fallbackHandler
+                        )
+                })
+            )
         );
         vm.deal(address(account), 1 ether);
     }
@@ -96,5 +98,52 @@ contract MSATest is BootstrapUtil, Test {
         entrypoint.handleOps(userOps, payable(address(0x69)));
 
         assertTrue(target.value() == 1337);
+    }
+
+    function test_execVia4337__WithInitCode() public {
+        bytes memory setValueOnTarget = abi.encodeCall(MockTarget.setValue, 1337);
+        bytes memory execFunction =
+            abi.encodeCall(IExecution.execute, (address(target), 0, setValueOnTarget));
+
+        // setup account init config
+        BootstrapConfig[] memory validators = makeBootstrapConfig(address(defaultValidator), "");
+        BootstrapConfig[] memory executors = makeBootstrapConfig(address(defaultExecutor), "");
+        BootstrapConfig memory hook = _makeBootstrapConfig(address(0), "");
+        BootstrapConfig memory fallbackHandler = _makeBootstrapConfig(address(0), "");
+
+        bytes memory initCode =
+            bootstrapSingleton._getInitMSACalldata(validators, executors, hook, fallbackHandler);
+
+        bytes32 salt = keccak256("newAccount");
+        address newAccount = factory.getAddress(salt, initCode);
+        vm.deal(newAccount, 1 ether);
+
+        UserOperation memory userOp = UserOperation({
+            sender: newAccount,
+            nonce: entrypoint.getNonce(newAccount, 0),
+            initCode: abi.encodePacked(
+                address(factory), abi.encodeWithSelector(factory.createAccount.selector, salt, initCode)
+                ),
+            callData: execFunction,
+            callGasLimit: 2e6,
+            verificationGasLimit: 2e6,
+            preVerificationGas: 2e6,
+            maxFeePerGas: 1,
+            maxPriorityFeePerGas: 1,
+            paymasterAndData: bytes(""),
+            signature: abi.encodePacked(address(defaultValidator), hex"41414141")
+        });
+        UserOperation[] memory userOps = new UserOperation[](1);
+        userOps[0] = userOp;
+
+        entrypoint.handleOps(userOps, payable(address(0x69)));
+
+        assertTrue(target.value() == 1337);
+    }
+
+    function test_receiveNativeToken() public {
+        vm.deal(address(this), 100 ether);
+        address(account).call{ value: 100 ether }("");
+        assertTrue(address(account).balance >= 100 ether);
     }
 }

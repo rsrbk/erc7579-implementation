@@ -66,7 +66,8 @@ contract MSA_withRegistryExtensionTest is BootstrapUtil, Test {
             validators, executors, fallbackHandler, address(registry), trustedAttester
         );
 
-        address newAccount = factory.getAddress(0, initCode);
+        bytes32 salt = keccak256("newAccount");
+        address newAccount = factory.getAddress(salt, initCode);
         vm.deal(newAccount, 1 ether);
 
         uint192 key = uint192(bytes24(bytes20(address(defaultValidator))));
@@ -76,7 +77,7 @@ contract MSA_withRegistryExtensionTest is BootstrapUtil, Test {
             sender: address(newAccount),
             nonce: nonce,
             initCode: abi.encodePacked(
-                address(factory), abi.encodeWithSelector(factory.createAccount.selector, 0, initCode)
+                address(factory), abi.encodeWithSelector(factory.createAccount.selector, salt, initCode)
                 ),
             callData: execFunction,
             callGasLimit: 2e6,
