@@ -7,8 +7,7 @@ interface IERC4337 {
         uint256 nonce;
         bytes initCode;
         bytes callData;
-        uint256 callGasLimit;
-        uint256 verificationGasLimit;
+        bytes32 accountGasLimits;
         uint256 preVerificationGas;
         uint256 maxFeePerGas;
         uint256 maxPriorityFeePerGas;
