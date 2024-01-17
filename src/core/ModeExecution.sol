@@ -4,6 +4,11 @@ pragma solidity ^0.8.23;
 import { DecodeLib } from "../utils/Decode.sol";
 import { IExecution } from "../interfaces/IMSA.sol";
 
+/**
+ * this enum informs how the data should be decoded.
+ * It defines if the execution is single/batched/delegatecall
+ * this enum is in scope for validation modules to be able to decode the data
+ */
 enum SELECTOR {
     NONE,
     SINGLE,
@@ -11,6 +16,10 @@ enum SELECTOR {
     DELEGATECALL
 }
 
+/**
+ * this enum informs how the execution should be handled in the execution phase.
+ * it should be out of scope for most validation modules
+ */
 enum EXEC_MODE {
     NONE,
     EXEC,
