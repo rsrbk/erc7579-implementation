@@ -67,7 +67,7 @@ contract MSA_withRegistryExtensionTest is BootstrapUtil, Test {
         );
 
         bytes32 salt = keccak256("newAccount");
-        address newAccount = factory.getAddress(salt, initCode);
+        address newAccount = factory.getAddress1(salt, initCode);
         vm.deal(newAccount, 1 ether);
 
         uint192 key = uint192(bytes24(bytes20(address(defaultValidator))));

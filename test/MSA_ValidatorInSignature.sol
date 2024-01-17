@@ -48,7 +48,7 @@ contract MSA_ValidatorInSignatureTest is BootstrapUtil, Test {
         // create account
         account = MSA(
             payable(
-                factory.createAccount({
+                factory.createAccount1({
                     salt: "1",
                     initCode: bootstrapSingleton._getInitMSACalldata(
                         validators, executors, hook, fallbackHandler
@@ -124,7 +124,7 @@ contract MSA_ValidatorInSignatureTest is BootstrapUtil, Test {
             )
         );
 
-        address newAccount = factory.getAddress(0, initCode);
+        address newAccount = factory.getAddress1(0, initCode);
         vm.deal(newAccount, 1 ether);
 
         UserOperation memory userOp = UserOperation({

@@ -44,7 +44,7 @@ contract MSATest is BootstrapUtil, Test {
         // create account
         account = MSA(
             payable(
-                factory.createAccount({
+                factory.createAccount1({
                     salt: "1",
                     initCode: bootstrapSingleton._getInitMSACalldata(
                         validators, executors, hook, fallbackHandler
@@ -115,7 +115,7 @@ contract MSATest is BootstrapUtil, Test {
             bootstrapSingleton._getInitMSACalldata(validators, executors, hook, fallbackHandler);
 
         bytes32 salt = keccak256("newAccount");
-        address newAccount = factory.getAddress(salt, initCode);
+        address newAccount = factory.getAddress1(salt, initCode);
         vm.deal(newAccount, 1 ether);
 
         UserOperation memory userOp = UserOperation({

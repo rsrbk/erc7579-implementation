@@ -160,10 +160,10 @@ abstract contract MSABase is Execution, ModuleManager, IERC4337, IMSA, Fallback 
         if (isAlreadyInitialized()) revert();
         _initModuleManager();
 
-        // this is just implemented for demonstration purposes. You can use any other initialization logic here.
-        (address bootstrap, bytes memory bootstrapCall) = abi.decode(data, (address, bytes));
-        (bool success,) = bootstrap.delegatecall(bootstrapCall);
-        if (!success) revert();
+        // // this is just implemented for demonstration purposes. You can use any other initialization logic here.
+        // (address bootstrap, bytes memory bootstrapCall) = abi.decode(data, (address, bytes));
+        // (bool success,) = bootstrap.delegatecall(bootstrapCall);
+        // if (!success) revert();
     }
 
     function supportsInterface(bytes4 interfaceID) public pure virtual override returns (bool) {
