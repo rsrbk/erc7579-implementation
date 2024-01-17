@@ -5,12 +5,14 @@ import { DecodeLib } from "../utils/Decode.sol";
 import { IExecution } from "../interfaces/IMSA.sol";
 
 enum SELECTOR {
+    NONE,
     SINGLE,
     BATCH,
     DELEGATECALL
 }
 
 enum EXEC_MODE {
+    NONE,
     EXEC,
     TRY_EXEC
 }
