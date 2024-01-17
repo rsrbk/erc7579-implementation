@@ -11,6 +11,8 @@ import { IExecution } from "../interfaces/IMSA.sol";
  * https://github.com/Vectorized/solady/blob/main/src/accounts/ERC4337.sol
  */
 contract Execution {
+    error ExecutionFailed();
+
     function _execute(IExecution.Execution[] calldata executions)
         internal
         returns (bytes[] memory result)

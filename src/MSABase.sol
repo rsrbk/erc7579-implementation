@@ -124,15 +124,8 @@ abstract contract MSABase is Execution, ModuleManager, IERC4337, IMSA, Fallback 
         virtual
         onlyEntryPointOrSelf
     {
-        bytes4 execSelector = bytes4(userOp.callData[4:8]);
-        if (execSelector == this.execute.selector) {
-            (address target, uint256 value, bytes calldata callData) =
-                DecodeLib.decodeSingle(userOp.callData[4:]);
-            _execute(target, value, callData);
-        } else if (execSelector == this.executeBatch.selector) {
-            IExecution.Execution[] calldata executions = DecodeLib.decodeBatch(userOp.callData[4:]);
-            _execute(executions);
-        }
+        (bool succcess,) = address(this).call(userOp.callData[4:]);
+        if (!succcess) revert ExecutionFailed();
     }
 
     /////////////////////////////////////////////////////
