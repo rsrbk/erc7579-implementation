@@ -8,6 +8,7 @@ import { Execution, IExecution } from "./core/Execution.sol";
 import { DecodeLib } from "./utils/Decode.sol";
 import { Fallback } from "./core/Fallback.sol";
 import { ModuleManager } from "./core/ModuleManager.sol";
+import "forge-std/console2.sol";
 
 /**
  * @title MSABase
